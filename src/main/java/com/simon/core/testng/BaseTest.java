@@ -1,10 +1,10 @@
 package com.simon.core.testng;
 
-import com.smile.core.asserts.SoftAssertions;
-import com.smile.core.config.Configurator;
-import com.smile.core.listeners.SmileTestListener;
-import com.smile.core.reporter.Reporter;
-import com.smile.core.utils.FileUtils;
+import com.simon.core.asserts.SoftAssertions;
+import com.simon.core.config.Configurator;
+import com.simon.core.listeners.SmileTestListener;
+import com.simon.core.reporter.Reporter;
+import com.simon.core.utils.FileUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.ITestContext;

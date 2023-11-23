@@ -7,13 +7,13 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
-import static com.smile.constant.JsonPathConstant.DATA_PATH;
-import static com.smile.constant.JsonPathConstant.MESSAGE_PATH;
-
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
 public class ApiResponse {
+    public static final String MESSAGE_PATH = "message";
+    public static final String DATA_PATH = "data";
+
     private Response response;
 
     public static ApiResponse of(Response response) {

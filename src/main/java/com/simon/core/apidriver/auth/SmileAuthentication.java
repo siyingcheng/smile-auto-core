@@ -1,17 +1,14 @@
 package com.simon.core.apidriver.auth;
 
-import com.smile.core.api.ApiResponse;
-import com.smile.core.config.ConfigKeys;
-import com.smile.core.config.Configurator;
+import com.simon.core.api.ApiResponse;
+import com.simon.core.config.ConfigKeys;
+import com.simon.core.config.Configurator;
+import com.simon.core.reporter.ReportFactor;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import java.util.Base64;
 
-import static com.smile.core.reporter.ReportFactor.reportRequestHeader;
-import static com.smile.core.reporter.ReportFactor.reportRequestUrl;
-import static com.smile.core.reporter.ReportFactor.reportResponseBody;
-import static com.smile.core.reporter.ReportFactor.reportResponseHeaders;
 import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
@@ -23,11 +20,11 @@ public record SmileAuthentication(Configurator configurator) implements IAuthent
         String loginUrl = configurator.getBackendUrl() + configurator.getParameterOrDefault(ConfigKeys.LOGIN_URI, DEFAULT_LOGIN_URL);
         RequestSpecification request = given()
                 .header(AUTHORIZATION, getBasicToken(username, password));
-        reportRequestUrl("POST", loginUrl);
-        reportRequestHeader(request, true);
+        ReportFactor.reportRequestUrl("POST", loginUrl);
+        ReportFactor.reportRequestHeader(request, true);
         Response response = request.post(loginUrl);
-        reportResponseHeaders(response, true);
-        reportResponseBody(response, true);
+        ReportFactor.reportResponseHeaders(response, true);
+        ReportFactor.reportResponseBody(response, true);
         return ApiResponse.of(response);
     }
 
