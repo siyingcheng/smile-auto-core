@@ -5,7 +5,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.model.Test;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-import com.smile.core.utils.FileUtils;
+import com.simon.core.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.IReporter;
 
@@ -16,7 +16,8 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.smile.core.reporter.HtmlMarkup.bolder;
+import static com.simon.core.reporter.HtmlMarkup.bolder;
+
 
 @Slf4j
 public class Reporter implements IReporter {

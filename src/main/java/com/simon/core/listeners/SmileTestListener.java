@@ -2,9 +2,9 @@ package com.simon.core.listeners;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
-import com.smile.core.config.Configurator;
-import com.smile.core.reporter.HtmlMarkup;
-import com.smile.core.reporter.Reporter;
+import com.simon.core.config.Configurator;
+import com.simon.core.reporter.HtmlMarkup;
+import com.simon.core.reporter.Reporter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.ITestContext;

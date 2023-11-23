@@ -3,7 +3,7 @@ package com.simon.core.reporter;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.google.gson.Gson;
-import com.smile.core.apidriver.ApiResponseDto;
+import com.simon.core.api.ApiResponseDto;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;

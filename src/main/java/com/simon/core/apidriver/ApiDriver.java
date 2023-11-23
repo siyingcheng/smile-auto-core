@@ -1,9 +1,10 @@
 package com.simon.core.apidriver;
 
-import com.smile.apiobjects.user.SmileUsers;
-import com.smile.core.api.ApiResponse;
-import com.smile.core.apidriver.auth.IAuthentication;
-import com.smile.core.config.ConfigKeys;
+import com.simon.core.api.ApiResponse;
+import com.simon.core.apidriver.auth.IAuthentication;
+import com.simon.core.apidriver.auth.ILogin;
+import com.simon.core.config.ConfigKeys;
+import com.simon.core.reporter.ReportFactor;
 import io.restassured.config.HttpClientConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
@@ -16,11 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.smile.core.reporter.ReportFactor.reportRequestBody;
-import static com.smile.core.reporter.ReportFactor.reportRequestHeader;
-import static com.smile.core.reporter.ReportFactor.reportRequestUrl;
-import static com.smile.core.reporter.ReportFactor.reportResponseBody;
-import static com.smile.core.reporter.ReportFactor.reportResponseHeaders;
 import static io.restassured.RestAssured.given;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
@@ -49,18 +45,20 @@ public class ApiDriver implements RestAPI {
         isDeepReporting = Boolean.parseBoolean(auth.configurator().getParameterOrDefault(ConfigKeys.DEEP_REPORTING, "false"));
     }
 
+    @Override
     public ApiResponse get(String url) {
         return get(url, null);
     }
 
+    @Override
     public ApiResponse get(String url, String payload) {
         url = backendUrl + url;
         RequestSpecification request = generateRequestSpecification(payload);
-        reportRequestUrl("GET", url);
-        reportRequestHeader(request, isDeepReporting);
+        ReportFactor.reportRequestUrl("GET", url);
+        ReportFactor.reportRequestHeader(request, isDeepReporting);
         Response response = request.get(url);
-        reportResponseHeaders(response, isDeepReporting);
-        reportResponseBody(response, isDeepReporting);
+        ReportFactor.reportResponseHeaders(response, isDeepReporting);
+        ReportFactor.reportResponseBody(response, isDeepReporting);
         return ApiResponse.of(response);
     }
 
@@ -68,12 +66,12 @@ public class ApiDriver implements RestAPI {
     public ApiResponse post(String url, String payload) {
         url = backendUrl + url;
         RequestSpecification request = generateRequestSpecification(payload);
-        reportRequestUrl("POST", url);
-        reportRequestHeader(request, isDeepReporting);
-        reportRequestBody(payload, isDeepReporting);
+        ReportFactor.reportRequestUrl("POST", url);
+        ReportFactor.reportRequestHeader(request, isDeepReporting);
+        ReportFactor.reportRequestBody(payload, isDeepReporting);
         Response response = request.post(url);
-        reportResponseHeaders(response, isDeepReporting);
-        reportResponseBody(response, isDeepReporting);
+        ReportFactor.reportResponseHeaders(response, isDeepReporting);
+        ReportFactor.reportResponseBody(response, isDeepReporting);
         return ApiResponse.of(response);
     }
 
@@ -85,7 +83,7 @@ public class ApiDriver implements RestAPI {
         return response;
     }
 
-    public ApiResponse login(SmileUsers user) {
+    public ApiResponse login(ILogin user) {
         return login(user.getUsername(), user.getPassword());
     }
 
@@ -93,31 +91,34 @@ public class ApiDriver implements RestAPI {
         this.bearerToken = null;
     }
 
+    @Override
     public ApiResponse delete(String url, String payload) {
         url = backendUrl + url;
         RequestSpecification request = generateRequestSpecification(payload);
-        reportRequestUrl("DELETE", url);
-        reportRequestHeader(request, isDeepReporting);
-        reportRequestBody(payload, isDeepReporting);
+        ReportFactor.reportRequestUrl("DELETE", url);
+        ReportFactor.reportRequestHeader(request, isDeepReporting);
+        ReportFactor.reportRequestBody(payload, isDeepReporting);
         Response response = request.delete(url);
-        reportResponseHeaders(response, isDeepReporting);
-        reportResponseBody(response, isDeepReporting);
+        ReportFactor.reportResponseHeaders(response, isDeepReporting);
+        ReportFactor.reportResponseBody(response, isDeepReporting);
         return ApiResponse.of(response);
     }
 
+    @Override
     public ApiResponse delete(String url) {
         return delete(url, null);
     }
 
+    @Override
     public ApiResponse put(String url, String payload) {
         url = backendUrl + url;
         RequestSpecification request = generateRequestSpecification(payload);
-        reportRequestUrl("PUT", url);
-        reportRequestHeader(request, isDeepReporting);
-        reportRequestBody(payload, isDeepReporting);
+        ReportFactor.reportRequestUrl("PUT", url);
+        ReportFactor.reportRequestHeader(request, isDeepReporting);
+        ReportFactor.reportRequestBody(payload, isDeepReporting);
         Response response = request.put(url);
-        reportResponseHeaders(response, isDeepReporting);
-        reportResponseBody(response, isDeepReporting);
+        ReportFactor.reportResponseHeaders(response, isDeepReporting);
+        ReportFactor.reportResponseBody(response, isDeepReporting);
         return ApiResponse.of(response);
     }
 

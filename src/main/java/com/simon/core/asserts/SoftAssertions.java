@@ -1,6 +1,6 @@
 package com.simon.core.asserts;
 
-import com.smile.core.reporter.Reporter;
+import com.simon.core.reporter.Reporter;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import static com.aventstack.extentreports.Status.FAIL;
 import static com.aventstack.extentreports.Status.PASS;
-import static com.smile.core.reporter.HtmlMarkup.lineBreak;
+import static com.simon.core.reporter.HtmlMarkup.lineBreak;
 
 public class SoftAssertions {
     private final Reporter reporter = Reporter.getInstance();
