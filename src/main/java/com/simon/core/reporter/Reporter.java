@@ -2,7 +2,9 @@ package com.simon.core.reporter;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.model.Media;
 import com.aventstack.extentreports.model.Test;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.simon.core.utils.FileUtils;
@@ -10,12 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.IReporter;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.aventstack.extentreports.Status.FAIL;
+import static com.aventstack.extentreports.Status.PASS;
 import static com.simon.core.reporter.HtmlMarkup.bolder;
 
 
@@ -39,6 +44,11 @@ public class Reporter implements IReporter {
 
     public void log(Status status, String details) {
         getTest().log(status, details);
+    }
+
+    public void log(Status status, String details, String imageBase64) {
+        Media media = MediaEntityBuilder.createScreenCaptureFromBase64String(imageBase64).build();
+        getTest().log(status, details, media);
     }
 
     public void logStep(String stepDetails) {
@@ -95,16 +105,31 @@ public class Reporter implements IReporter {
         ExtentSparkReporter spark = new ExtentSparkReporter(reportFile.toString());
         extent.attachReporter(spark);
         // Custom Report Style
-        try {
-            spark.loadXMLConfig(System.getProperty("user.dir") + "/config/spark-config.xml");
-        } catch (IOException e) {
-            log.error("Failed to load spark-config.xml");
+        String sparkConfig = System.getProperty("user.dir") + "/config/spark-config.xml";
+        if (Files.exists(Path.of(sparkConfig))) {
+            loadXmlConfig(spark, sparkConfig);
         }
         // Report System Info
         extent.setSystemInfo("OS", System.getProperty("os.name") + " " + System.getProperty("os.version"));
         extent.setSystemInfo("User", System.getProperty("user.name"));
         extent.setSystemInfo("Java", System.getProperty("java.vm.name") + " " + System.getProperty("java.version"));
         log.info("Extent-reports generated: {}", reportFile);
+    }
+
+    private void loadXmlConfig(ExtentSparkReporter spark, String sparkConfig) {
+        try {
+            spark.loadXMLConfig(sparkConfig);
+        } catch (IOException e) {
+            log.error("Failed to load spark-config.xml");
+        }
+    }
+
+    public void reportAssertResult(boolean isFailed, String message) {
+        if (isFailed) {
+            log(FAIL, message);
+        } else {
+            log(PASS, message);
+        }
     }
 
     public void endReport() {

@@ -1,49 +1,53 @@
 package com.simon.core.asserts;
 
 import com.simon.core.reporter.Reporter;
-import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 
 import java.util.Optional;
 
-import static com.aventstack.extentreports.Status.FAIL;
-import static com.aventstack.extentreports.Status.PASS;
-import static com.simon.core.reporter.HtmlMarkup.lineBreak;
-
-public class SoftAssertions {
+public class SoftAssertions implements ISmileAssert {
     private final Reporter reporter = Reporter.getInstance();
 
-
+    @Override
     public void assertEquals(Object actual, Object expected) {
-        assertEquals(actual, expected, "");
+        assertEquals(actual, expected, "Actual and Expected");
     }
 
-
+    @Override
     public void assertEquals(Object actual, Object expected, String message) {
         Optional<AssertionError> assertionError = softAssertResult(() -> Assert.assertEquals(actual, expected, message));
         String formattedMessage = getEqualsFormattedMessage(actual, expected, message);
-        reportAssertResult(assertionError.isPresent(), formattedMessage);
+        reporter.reportAssertResult(assertionError.isPresent(), formattedMessage);
     }
 
+    @Override
     public void assertNotNull(Object object, String message) {
         Optional<AssertionError> assertionError = softAssertResult(() -> Assert.assertNotNull(object, message));
-        reportAssertResult(assertionError.isPresent(), message);
+        reporter.reportAssertResult(assertionError.isPresent(), message);
     }
 
-    private void reportAssertResult(boolean isFailed, String message) {
-        if (isFailed) {
-            reporter.log(FAIL, message);
-        } else {
-            reporter.log(PASS, message);
-        }
+    @Override
+    public void assertFalse(boolean condition) {
+        Optional<AssertionError> assertionError = softAssertResult(() -> Assert.assertFalse(condition));
+        reporter.reportAssertResult(assertionError.isPresent(), "Expected result is false");
     }
 
-    private String getEqualsFormattedMessage(Object actual, Object expected, String message) {
-        return """
-                %s %s
-                A: %s %s
-                E: %s %s
-                """.formatted(StringUtils.isEmpty(message) ? "" : message, lineBreak(), actual, lineBreak(), expected, lineBreak());
+    @Override
+    public void assertFalse(boolean condition, String message) {
+        Optional<AssertionError> assertionError = softAssertResult(() -> Assert.assertFalse(condition, message));
+        reporter.reportAssertResult(assertionError.isPresent(), message);
+    }
+
+    @Override
+    public void assertTrue(boolean condition) {
+        Optional<AssertionError> assertionError = softAssertResult(() -> Assert.assertTrue(condition));
+        reporter.reportAssertResult(assertionError.isPresent(), "Expected result is true");
+    }
+
+    @Override
+    public void assertTrue(boolean condition, String message) {
+        Optional<AssertionError> assertionError = softAssertResult(() -> Assert.assertTrue(condition, message));
+        reporter.reportAssertResult(assertionError.isPresent(), message);
     }
 
     private Optional<AssertionError> softAssertResult(SoftAssertWrapper wrapper) {
@@ -52,30 +56,6 @@ public class SoftAssertions {
             return Optional.empty();
         } catch (AssertionError e) {
             return Optional.of(e);
-        }
-    }
-
-    public void assertFalse(boolean condition) {
-        assertFalse(condition, null);
-    }
-
-    public void assertFalse(boolean condition, String message) {
-        if (condition) {
-            reporter.log(FAIL, message);
-        } else {
-            reporter.log(PASS, message);
-        }
-    }
-
-    public void assertTrue(boolean condition) {
-        assertTrue(condition, null);
-    }
-
-    public void assertTrue(boolean condition, String message) {
-        if (condition) {
-            reporter.log(PASS, message);
-        } else {
-            reporter.log(FAIL, message);
         }
     }
 }

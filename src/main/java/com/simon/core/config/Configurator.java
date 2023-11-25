@@ -1,6 +1,7 @@
 package com.simon.core.config;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -12,6 +13,7 @@ public class Configurator {
     private static final String DEFAULT_LOG_DIRECTOR = System.getProperty("user.dir") + "/log";
 
     private String backendUrl;
+    private String frontendUrl;
     private static Configurator instance = null;
     private Path reportPath;
     private Path logPath;
@@ -29,7 +31,8 @@ public class Configurator {
 
     public void initParameters(Map<String, String> params) {
         this.params = normalizeParameters(params);
-        setBackendUrl(getParameter(ConfigKeys.BACKEND_URL));
+        this.backendUrl = normalizeUrl(getParameter(ConfigKeys.BACKEND_URL));
+        this.frontendUrl = normalizeUrl(getParameter(ConfigKeys.FRONTEND_URL));
         this.reportPath = Path.of(getParameterOrDefault(ConfigKeys.REPORT_LOCATION, DEFAULT_REPORT_DIRECTOR));
         this.logPath = Path.of(getParameterOrDefault(ConfigKeys.LOG_LOCATION, DEFAULT_LOG_DIRECTOR));
     }
@@ -51,10 +54,11 @@ public class Configurator {
         );
     }
 
-    public void setBackendUrl(String backendUrl) {
-        if (!backendUrl.startsWith("http")) {
-            backendUrl = "http://" + backendUrl;
+    private String normalizeUrl(String url) {
+        if (StringUtils.isEmpty(url)) return null;
+        if (!url.startsWith("http")) {
+            url = "http://" + url;
         }
-        this.backendUrl = backendUrl;
+        return url;
     }
 }
