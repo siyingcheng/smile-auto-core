@@ -3,7 +3,6 @@ package com.simon.core.listeners;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.simon.core.config.Configurator;
-import com.simon.core.reporter.HtmlMarkup;
 import com.simon.core.reporter.Reporter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -62,10 +61,7 @@ public class SmileTestListener implements ITestListener {
     public void onTestFailure(ITestResult result) {
         ExtentTest extentTest = reporter.getTest();
         if (extentTest.getStatus() == Status.PASS) {
-            Throwable throwable = result.getThrowable();
-            String detailStack = HtmlMarkup.bolder(throwable.getMessage()) + "<br/>" +
-                    Arrays.stream(throwable.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("<br/>"));
-            extentTest.log(Status.FAIL, detailStack);
+            extentTest.log(Status.FAIL, result.getThrowable());
         }
         log.info("onTestFailure");
         ITestListener.super.onTestFailure(result);
