@@ -15,7 +15,12 @@ public class SoftAssertions implements ISmileAssert {
 
     @Override
     public void assertEquals(Object actual, Object expected, String message) {
-        Optional<AssertionError> assertionError = softAssertResult(() -> Assert.assertEquals(actual, expected, message));
+        Optional<AssertionError> assertionError;
+        if (!actual.getClass().equals(expected.getClass())) {
+            assertionError = softAssertResult(() -> Assert.assertEquals(actual, expected, message));
+        } else {
+            assertionError = softAssertResult(() -> Assert.assertEquals(actual.toString(), expected.toString(), message));
+        }
         String formattedMessage = getEqualsFormattedMessage(actual, expected, message);
         reporter.reportAssertResult(assertionError.isPresent(), formattedMessage);
     }

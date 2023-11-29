@@ -35,7 +35,11 @@ public class UIAssertions implements ISmileAssert {
     public void assertEquals(Object actual, Object expected, String message) {
         String formattedMessage = getEqualsFormattedMessage(actual, expected, message);
         try {
-            Assert.assertEquals(actual, expected, message);
+            if (actual.getClass().equals(expected.getClass())) {
+                Assert.assertEquals(actual, expected, message);
+            } else {
+                Assert.assertEquals(actual.toString(), expected.toString(), message);
+            }
             reporter.log(PASS, formattedMessage);
         } catch (AssertionError e) {
             reporter.log(FAIL, formattedMessage, getScreenShotImageBase64());
